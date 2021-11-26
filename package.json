@@ -1,0 +1,7 @@
+{
+  "name": "rssu-timetable",
+  "version": "0.0.1",
+  "description": "Чат-бот Telegram для конвертации расписания любой группы РГСУ в файл календаря",
+  "private": true,
+  "author": "Nick Chaykovsky <lis@chaikovskie.com>"
+}
