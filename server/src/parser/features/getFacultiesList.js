@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
-import { EXCLUDE_SELECT_TEXT } from '../config';
-import { getTimetablePage } from './getTimetablePage';
+import { EXCLUDE_SELECT_TEXT } from '../config.js';
+import { getTimetablePage } from './getTimetablePage.js';
 
 export async function getFacultiesList() {
   const page = await getTimetablePage();

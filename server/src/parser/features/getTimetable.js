@@ -1,8 +1,7 @@
 import cheerio from 'cheerio';
-import { Timetable, Timetables } from '../types';
-import { getTimetablePage } from './getTimetablePage';
+import { getTimetablePage } from './getTimetablePage.js';
 
-function parseLectureSubject(subject: string) {
+function parseLectureSubject(subject) {
   const daysRegex = /(\d{2}\.\d{2}\.\d{2})/gm;
   const typeRegex = /(лекция)|(практическое занятие)|(лабораторная работа)/gi;
   const charsRegex = /;|\(|\)|/gm;
@@ -18,11 +17,11 @@ function parseLectureSubject(subject: string) {
   return { days, type, text };
 }
 
-export async function getTimetables(faculty: number, group: string) {
+export async function getTimetables(faculty, group) {
   const page = await getTimetablePage(faculty, group);
   const $ = cheerio.load(page);
 
-  function parseDayLectures(rows: cheerio.Cheerio) {
+  function parseDayLectures(rows) {
     if (rows.length === 1 && rows.find('td').text() === 'Занятий нет') {
       return [];
     }
@@ -59,7 +58,7 @@ export async function getTimetables(faculty: number, group: string) {
       .get();
   }
 
-  function parseTimetable(timetable: cheerio.Cheerio): Timetable {
+  function parseTimetable(timetable) {
     const result = [];
     const days = $(timetable).find('.day');
 
@@ -76,7 +75,7 @@ export async function getTimetables(faculty: number, group: string) {
     return result;
   }
 
-  const timetables: Partial<Timetables> = {
+  const timetables = {
     odd: null,
     even: null,
   };
