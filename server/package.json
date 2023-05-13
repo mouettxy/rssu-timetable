@@ -8,8 +8,13 @@
     "dev": "nodemon src/main.js"
   },
   "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "@hapi/jwt": "^3.2.0",
+    "bcrypt": "^5.1.0",
     "cheerio": "^1.0.0-rc.10",
     "got": "^11.8.3",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.1",
     "nodemon": "^2.0.22"
   }

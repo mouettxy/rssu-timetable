@@ -18,6 +18,8 @@
 		"@fullcalendar/interaction": "^6.1.7",
 		"@fullcalendar/timegrid": "^6.1.7",
 		"@fullcalendar/vue3": "^6.1.7",
+		"axios": "^1.4.0",
+		"jwt-decode": "^3.1.2",
 		"nanoid": "^4.0.2",
 		"pinia": "^2.0.22",
 		"qalendar": "^2.5.0",

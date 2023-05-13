@@ -1,6 +1,8 @@
 import { getGroupsList, getTimetables } from './parser/parser.js';
 import { connectToDb } from './db/db.js'
-import {Timetable} from './db/models/timetable.js'
+import { createServer } from './server.js';
+import { buildAuthRoutes } from './routes/auth.js';
+import { buildMiscRoutes } from './routes/misc.js';
 
 async function generateCollegeTimetables() {
   const collegeFaculty = 20;
@@ -22,7 +24,11 @@ async function generateCollegeTimetables() {
 }
 
 (async () => {
-  await connectToDb();
+  const db = await connectToDb();
+  const server = await createServer();
+
+  buildAuthRoutes(server);
+  buildMiscRoutes(server);
 
   // const timetables = await generateCollegeTimetables();
 

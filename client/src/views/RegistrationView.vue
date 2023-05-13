@@ -12,28 +12,51 @@
                 v-model="email"
                 label="Почта"
                 placeholder="example@gmail.com"
-                required
+                :rules="[requiredValueRule]"
+                name="email"
                 type="email"
               ></v-text-field>
               <v-text-field
                 v-model="password"
                 label="Пароль"
+                :rules="[requiredValueRule]"
+                name="new-password"
                 required
                 type="password"
               ></v-text-field>
               <v-text-field
                 v-model="confirmPassword"
                 label="Повторите пароль"
+                :rules="[requiredValueRule]"
+                name="new-password-confirm"
                 required
                 type="password"
               ></v-text-field>
               <v-select
-                v-model="country"
-                :items="countries"
+                v-model="group"
+                :items="groups"
+                :rules="[requiredValueRule]"
+                name="group"
+                item-title="text"
+                item-value="value"
                 label="Группа"
                 required
+                :loading="groupsLoading"
               ></v-select>
-              <v-btn type="submit" color="primary" class="mr-4"
+              <v-alert
+                v-if="error"
+                type="error"
+                density="compact"
+                border="start"
+                variant="tonal"
+                class="mb-6"
+                :text="error"
+              ></v-alert>
+              <v-btn
+                type="submit"
+                :loading="loading"
+                color="primary"
+                class="mr-4"
                 >Создать аккаунт</v-btn
               >
             </v-form>
@@ -52,30 +75,78 @@
 </template>
 
 <script>
+import { API } from "@/api/client";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/user";
+
 export default {
   data() {
     return {
       email: "",
       password: "",
       confirmPassword: "",
-      country: "",
-      countries: ["Country 1", "Country 2", "Country 3"], // Replace with your own list of countries
+      group: "",
+      error: "",
+      groups: [],
+      loading: false,
+      groupsLoading: false,
+      requiredValueRule: (value) => {
+        if (value) return true;
+
+        return "Заполните поле";
+      },
     };
   },
+  computed: {
+    ...mapStores(useUserStore),
+  },
   methods: {
-    submitForm() {
-      if (this.$refs.form.validate()) {
-        // Form validation successful, submit the form
-        // Here, you can perform additional logic such as making an API request to register the user
-        // For brevity, I'm just printing the form data to the console
-        console.log({
-          email: this.email,
-          password: this.password,
-          confirmPassword: this.confirmPassword,
-          country: this.country,
-        });
+    async getGroups() {
+      try {
+        this.groupsLoading = true;
+        const response = await API.get("/misc/groups");
+
+        this.groups = response.data.groups;
+      } catch (error) {
+        this.error = "Ошибка при загрузке групп, перезагрузите страницу";
+      }
+
+      this.groupsLoading = false;
+    },
+
+    async submitForm(event) {
+      event.preventDefault();
+
+      const validation = await this.$refs.form.validate();
+
+      if (validation.valid) {
+        if (this.password !== this.confirmPassword) {
+          this.error = "Пароли не совпадают";
+          return;
+        }
+
+        this.loading = true;
+        try {
+          const response = await API.post("/auth/register", {
+            email: this.email,
+            password: this.password,
+            group: this.group,
+          });
+
+          this.error = "";
+
+          this.userStore.setUserByToken(response.data.token);
+
+          this.$router.push("/");
+        } catch (error) {
+          this.error = error.response.data.message;
+        }
+        this.loading = false;
       }
     },
+  },
+  mounted() {
+    this.getGroups();
   },
 };
 </script>

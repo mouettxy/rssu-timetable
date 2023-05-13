@@ -5,12 +5,15 @@ export function connectToDb() {
 
   return new Promise((resolve) => {
     mongoose
-      .connect(connectionString)
+      .connect(connectionString, {useNewUrlParser: true,
+        useUnifiedTopology: true
+      })
       .then(() => {
         console.log('Database connection successful');
         resolve(true)
       })
       .catch((err) => {
+        console.error(err)
         console.error('Database connection error');
         resolve(false)
       });
