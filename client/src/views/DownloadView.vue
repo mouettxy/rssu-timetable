@@ -1,68 +1,37 @@
 <template>
-  <v-main class="bg-grey-lighten-3">
+  <BaseView>
     <v-container>
-      <v-row>
-        <v-col cols="2">
-          <v-sheet rounded="lg">
-            <v-list rounded="lg">
-              <v-list-item link to="/">
-                <v-list-item-title> Главная </v-list-item-title>
-              </v-list-item>
-              <v-list-item link to="/settings">
-                <v-list-item-title> Настройки </v-list-item-title>
-              </v-list-item>
-              <v-list-item link to="/download">
-                <v-list-item-title> Скачать </v-list-item-title>
-              </v-list-item>
-
-              <v-divider class="my-2"></v-divider>
-
-              <v-list-item link color="grey-lighten-4">
-                <v-list-item-title> Выйти </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-sheet>
-        </v-col>
-
-        <v-col>
-          <v-sheet
-            min-height="calc(100vh - 32px)"
-            class="sheet pa-4"
-            rounded="lg"
+      <v-row align="center">
+        <v-col cols="12" sm="12" md="6">
+          <v-text-field
+            label="Название календаря"
+            v-model="fileName"
+            outlined
+            :disabled="isDownloading"
+          ></v-text-field>
+          <v-btn
+            color="primary"
+            @click="downloadFile"
+            :loading="isDownloading"
+            block
           >
-            <v-container>
-              <v-row align="center">
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field
-                    label="File Name"
-                    v-model="fileName"
-                    outlined
-                    :disabled="isDownloading"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    color="primary"
-                    @click="downloadFile"
-                    :loading="isDownloading"
-                  >
-                    Download
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-sheet>
+            Скачать календарь
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
-  </v-main>
+  </BaseView>
 </template>
 
 <script>
 import { ref } from "vue";
+import BaseView from "@/components/BaseView.vue";
 
 export default {
   name: "DownloadComponent",
+  components: {
+    BaseView,
+  },
   setup() {
     const fileName = ref("");
     const isDownloading = ref(false);

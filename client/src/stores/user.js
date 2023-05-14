@@ -23,5 +23,10 @@ export const useUserStore = defineStore({
         this.isAuth = false;
       }
     },
+    logOut() {
+      localStorage.removeItem("token");
+      this.user = null;
+      this.isAuth = false;
+    },
   },
 });

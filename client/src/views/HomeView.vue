@@ -1,47 +1,21 @@
 <template>
-  <v-main class="bg-grey-lighten-3">
-    <v-container>
-      <v-row>
-        <v-col cols="2">
-          <v-sheet rounded="lg">
-            <v-list rounded="lg">
-              <v-list-item link to="/">
-                <v-list-item-title> Главная </v-list-item-title>
-              </v-list-item>
-              <v-list-item link to="/settings">
-                <v-list-item-title> Настройки </v-list-item-title>
-              </v-list-item>
-              <v-list-item link to="/download">
-                <v-list-item-title> Скачать </v-list-item-title>
-              </v-list-item>
-
-              <v-divider class="my-2"></v-divider>
-
-              <v-list-item link color="grey-lighten-4">
-                <v-list-item-title> Выйти </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-sheet>
-        </v-col>
-
-        <v-col>
-          <v-sheet min-height="calc(100vh - 32px)" class="sheet" rounded="lg">
-            <Qalendar :config="config" :events="events" />
-          </v-sheet>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+  <BaseView>
+    <Qalendar :config="config" :events="events" />
+  </BaseView>
 </template>
 
 <script>
 import { Qalendar } from "qalendar";
 import timetablesJson from "../timetables.json";
 import { nanoid } from "nanoid";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/user";
+import BaseView from "@/components/BaseView.vue";
 
 export default {
   components: {
     Qalendar,
+    BaseView,
   },
 
   data() {
@@ -61,34 +35,19 @@ export default {
         },
       },
 
-      events: [
-        {
-          title: "Advanced algebra",
-          with: "Chandler Bing",
-          time: { start: "2023-05-16 12:05", end: "2022-05-16 13:35" },
-          color: "yellow",
-          isEditable: true,
-          id: "753944708f0f",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        },
-        {
-          title: "Ralph on holiday",
-          with: "Rachel Greene",
-          time: { start: "2022-05-10", end: "2022-05-22" },
-          color: "green",
-          isEditable: true,
-          id: "5602b6f589fc",
-        },
-      ],
+      events: [],
     };
+  },
+
+  computed: {
+    ...mapStores(useUserStore),
   },
 
   methods: {
     generateEvents() {
       const timetables = timetablesJson.timetables;
 
-      const currentGroup = "БД-К-0-Д-2021-1";
+      const currentGroup = this.userStore.user.group;
 
       const currentTimetable = timetables.find(
         (timetable) => timetable.group === currentGroup
@@ -169,8 +128,6 @@ export default {
       });
 
       this.events = events;
-      console.log(events);
-      console.log(currentTimetable);
     },
     formatDate(dateString) {
       const date = new Date(dateString);
