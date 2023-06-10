@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://127.0.0.1:8090/",
+  baseURL: "http://rssutimetable.ru/api",
   timeout: 3000,
   headers: {
     "Content-Type": "application/json",
